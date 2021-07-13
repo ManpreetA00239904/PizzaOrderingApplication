@@ -4,23 +4,29 @@ package com.myapp.pizzaorderingapp.Adapters;
 import android.content.Context;
 import android.view.View;
 import com.myapp.pizzaorderingapp.R;
+import com.myapp.pizzaorderingapp.Topping;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ToppingAdapter extends BaseAdapter {
 
-    ArrayList<String> toppinglist;
+    ArrayList<Topping> toppinglist;
+    ArrayList<Boolean> selectedToppings;
 
 
     Context context;
 
-    public ToppingAdapter(ArrayList<String> toppinglist, Context context) {
+    public ToppingAdapter(ArrayList<Topping> toppinglist,ArrayList<Boolean> selectedToppings, Context context) {
 
         this.toppinglist=toppinglist;
         this.context=context;
+        this.selectedToppings=selectedToppings;
     }
 
     public int getCount() {
@@ -39,16 +45,37 @@ public class ToppingAdapter extends BaseAdapter {
     }
 
 
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View row;
         convertView = inflater.inflate(R.layout.toppingview, parent, false);
-        TextView toppingname;
+        TextView toppingname,toppingprice;
+        CheckBox cbtoppings;
 
         toppingname = (TextView) convertView.findViewById(R.id.toppingname);
+        toppingprice = (TextView) convertView.findViewById(R.id.toppingprice);
 
-        toppingname.setText(toppinglist.get(position));
+        cbtoppings = (CheckBox) convertView.findViewById(R.id.cbtoppings);
+        cbtoppings.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                if(b)
+                {
+                    selectedToppings.set(position,true);
+                }
+                else
+                {
+                    selectedToppings.set(position,false);
+                }
+
+            }
+        });
+
+        toppingname.setText(toppinglist.get(position).getName());
+        toppingname.setText("$"+toppinglist.get(position).getPrice());
+
         return (convertView);
     }
 }

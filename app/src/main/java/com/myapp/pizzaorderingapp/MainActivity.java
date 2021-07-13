@@ -13,7 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     ListView toppinglv;
-    ArrayList<String> toppinglist;
+    ArrayList<Topping> toppinglist;
+    ArrayList<Boolean> selectedToppings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,14 +22,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toppinglist=new ArrayList<>();
-        toppinglist.add("Extra Cheese");
-        toppinglist.add("Peppers");
-        toppinglist.add("Onions");
+        selectedToppings=new ArrayList<>();
+        toppinglist.add(new Topping("Extra Cheese",5));
+        toppinglist.add(new Topping("Peppers",4));
+        toppinglist.add(new Topping("Onions",3));
 
 
 
         toppinglv = findViewById(R.id.toppinglist);
-        ToppingAdapter adapter = new ToppingAdapter(toppinglist, getApplicationContext());
+        ToppingAdapter adapter = new ToppingAdapter(toppinglist, selectedToppings,getApplicationContext());
         toppinglv.setAdapter(adapter);
 
     }
