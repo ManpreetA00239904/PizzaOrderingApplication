@@ -7,19 +7,22 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:id="@+id/cbtoppings"
+        android:layout_marginTop="10dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:textColor="#232323"
         android:id="@+id/toppingname"
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:textStyle="bold"
+        android:textColor="#232323"
         android:gravity="end"
         android:id="@+id/toppingprice"
         />
