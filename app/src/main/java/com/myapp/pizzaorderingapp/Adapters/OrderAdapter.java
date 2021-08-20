@@ -64,7 +64,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.delimv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 obj.delete(id);
             }
         });

@@ -7,12 +7,17 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,17 +37,41 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Boolean> selectedToppings;
     private SQLiteDatabase mDb;
     public int baseprice = 15;
-    TextView total;
+    TextView total,choosetoppingtv,basepricetv;
     ToppingAdapter adapter;
+    int theme;
+    AlertDialog.Builder builder1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences preferences = getSharedPreferences("PIZZAAPP", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        if (preferences.getInt("theme", 0) != 0) {
+            if (preferences.getInt("theme", 0) == R.style.AppTheme1) {
+
+                setTheme(R.style.AppTheme1);
+                builder1 = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Material_Dialog));
+
+            } else {
+                setTheme(R.style.AppTheme);
+                builder1 = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Material_Light_Dialog));
+
+            }
+        } else {
+            setTheme(R.style.AppTheme);
+            builder1 = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Material_Light_Dialog));
+
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         toppinglist = new ArrayList<>();
         selectedToppings = new ArrayList<>();
-
+        choosetoppingtv = findViewById(R.id.choosetoppingtv);
+        basepricetv=findViewById(R.id.basepricetv);
         total = findViewById(R.id.total);
         total.setText("TOTAL: $" + baseprice);
         toppinglist.add(new Topping("Extra Cheese", 5));
@@ -80,6 +109,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        RunAnimation();
+    }
+
+    private void RunAnimation()
+    {
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
+        a.reset();
+        choosetoppingtv.clearAnimation();
+        choosetoppingtv.startAnimation(a);
+        Animation a1 = AnimationUtils.loadAnimation(this, R.anim.move);
+        a1.reset();
+        basepricetv.clearAnimation();
+        basepricetv.startAnimation(a1);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu1, menu);
@@ -91,8 +138,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_view_order) {
             startActivity(new Intent(getApplicationContext(), OrderHistory.class));
+        } else if (id == R.id.change_theme) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), ChangeTheme.class));
         }
+
         return super.onOptionsItemSelected(item);
+
     }
 
     private void PlaceOrder(int total) {
@@ -108,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
             long orderdetailid = mDb.insert(OrderDetailContract.OrderDetailEntry.TABLE_NAME, null, cv);
         }
 
-        final AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+
         builder1.setTitle("Confirmation");
         builder1.setMessage("Order Placed successfully?");
 
@@ -133,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void refresh() {
         adapter.notifyDataSetChanged();
-        baseprice=15;
+        baseprice = 15;
         total.setText("TOTAL: $" + baseprice);
     }
 }

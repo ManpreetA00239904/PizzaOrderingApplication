@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:textColor="#232323"
+        android:textColor="?listFontColor"
         android:id="@+id/toppingname"
         />
     <TextView
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:textStyle="bold"
-        android:textColor="#232323"
+        android:textColor="?listFontColor"
         android:gravity="end"
         android:id="@+id/toppingprice"
         />

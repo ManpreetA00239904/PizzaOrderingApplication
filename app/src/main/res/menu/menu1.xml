@@ -6,5 +6,9 @@
         android:id="@+id/action_view_order"
         android:title="@string/view_order_history"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/change_theme"
+        android:title="@string/change_theme"
+        app:showAsAction="never" />
 
 </menu>

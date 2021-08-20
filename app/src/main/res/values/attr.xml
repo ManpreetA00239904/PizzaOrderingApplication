@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="listFontColor" format="color" />
+    <attr name="headColor" format="color" />
+    <attr name="headColor1" format="color" />
+    <attr name="headColor2" format="color" />
+    <attr name="buttonTextColor" format="color" />
+    <attr name="headingBack" format="color" />
+
+</resources>

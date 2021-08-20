@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,19 +27,34 @@ public class OrderHistory extends AppCompatActivity {
 
     private OrderAdapter mAdapter;
     private SQLiteDatabase mDb;
-
     TextView headingtv;
     Cursor cursor;
+    AlertDialog.Builder builder1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences preferences = getSharedPreferences("PIZZAAPP", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        if (preferences.getInt("theme", 0) != 0) {
+            if (preferences.getInt("theme", 0) == R.style.AppTheme1) {
+                setTheme(R.style.AppTheme1);
+                builder1 = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Material_Dialog));
+
+            } else {
+                setTheme(R.style.AppTheme);
+                builder1 = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Material_Light_Dialog));
+
+            }
+        } else {
+            setTheme(R.style.AppTheme);
+            builder1 = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Material_Light_Dialog));
+
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
-
         headingtv = findViewById(R.id.headingtv);
         RecyclerView waitlistRecyclerView;
-
-
         waitlistRecyclerView = (RecyclerView) this.findViewById(R.id.all_orders_list_view);
         waitlistRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         OrderDbHelper dbHelper = new OrderDbHelper(this);
@@ -46,8 +63,6 @@ public class OrderHistory extends AppCompatActivity {
         headingtv.setText("Your Orders (" + cursor.getCount() + ")");
         mAdapter = new OrderAdapter(this, cursor);
         waitlistRecyclerView.setAdapter(mAdapter);
-
-
     }
 
 
@@ -59,7 +74,7 @@ public class OrderHistory extends AppCompatActivity {
     }
 
     public void delete(final long orderid) {
-        final AlertDialog.Builder builder1 = new AlertDialog.Builder(OrderHistory.this);
+
         builder1.setTitle("Confirmation");
         builder1.setMessage("Are you sure you want to delete this order?");
 
@@ -104,12 +119,12 @@ public class OrderHistory extends AppCompatActivity {
         );
 
         String top = "";
-        if (cursor.moveToFirst()){
-            while(!cursor.isAfterLast()){
-            // Update the view holder with the information needed to display
-            int price = cursor.getInt(cursor.getColumnIndex(OrderDetailContract.OrderDetailEntry.COLUMN_TOPPING_PRICE));
-            String name = cursor.getString(cursor.getColumnIndex(OrderDetailContract.OrderDetailEntry.COLUMN_TOPPING_NAME));
-            top += name + "($" + price + "), ";
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                // Update the view holder with the information needed to display
+                int price = cursor.getInt(cursor.getColumnIndex(OrderDetailContract.OrderDetailEntry.COLUMN_TOPPING_PRICE));
+                String name = cursor.getString(cursor.getColumnIndex(OrderDetailContract.OrderDetailEntry.COLUMN_TOPPING_NAME));
+                top += name + "($" + price + "), ";
             }
         }
         cursor.close();

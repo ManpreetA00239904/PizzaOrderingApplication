@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Your Orders"
-        android:textColor="#222121"
+        android:textColor="?listFontColor"
         android:layout_marginTop="10dp"
         android:textAlignment="center"
         android:textSize="22sp"
